@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+import * as React from "react";const ALL_NAMES = ["foo", "bar", "baz"];interface NameListItemProps {
+  readonly name: string;
+  readonly onNameClick: (clickedName: string) => void;
+}const NameListItem: React.FC<NameListItemProps> = (props: NameListItemProps) => (
+  <li>
+    <button onClick={() => props.onNameClick(props.name)}>{props.name}</button>
+  </li>
+);const NameList: React.FC = () => {
+  const [lastClickedName, setLastClickedName] = React.useState<
+    string | undefined
+  >(undefined);  const onNameClick = (clickedName: string) => {
+    setLastClickedName(clickedName);
+  };  return (
+    <div>
+      <h1>
+        {lastClickedName === undefined
+          ? "No Name Clicked Yet"
+          : lastClickedName}
+      </h1>
+      <ul>
+        {ALL_NAMES.map((name: string, idx: number) => (
+          <NameListItem key={idx} name={name} onNameClick={onNameClick} />
+        ))}
+      </ul>
     </div>
   );
-}
+};
 
-export default App;
+export default NameList
