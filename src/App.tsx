@@ -1,29 +1,46 @@
-import * as React from "react";const ALL_NAMES = ["foo", "bar", "baz"];interface NameListItemProps {
+import * as React from "react";
+
+const ALL_NAMES = ["foo", "bar", "baz"];
+
+interface NameListItemProps {
   readonly name: string;
   readonly onNameClick: (clickedName: string) => void;
-}const NameListItem: React.FC<NameListItemProps> = (props: NameListItemProps) => (
+}
+
+const NameListItem: React.FC<NameListItemProps> = (
+  props: NameListItemProps
+) => (
   <li>
     <button onClick={() => props.onNameClick(props.name)}>{props.name}</button>
   </li>
-);const NameList: React.FC = () => {
-  const [lastClickedName, setLastClickedName] = React.useState<
-    string | undefined
-  >(undefined);  const onNameClick = (clickedName: string) => {
-    setLastClickedName(clickedName);
-  };  return (
+);
+
+const NameList: React.FC = () => {
+  const [clickedNames, setClickedNames] = React.useState<string[]>([]);
+
+  const onNameClick = (clickedName: string) => {
+    setClickedNames([...clickedNames, clickedName]);
+  };
+
+  return (
     <div>
       <h1>
-        {lastClickedName === undefined
+        {!clickedNames.length
           ? "No Name Clicked Yet"
-          : lastClickedName}
+          : clickedNames[clickedNames.length - 1]}
       </h1>
       <ul>
-        {ALL_NAMES.map((name: string, idx: number) => (
-          <NameListItem key={idx} name={name} onNameClick={onNameClick} />
-        ))}
+        {ALL_NAMES.filter((name) => !clickedNames.includes(name)).map(
+          (name: string, id: number) => (
+            <NameListItem 
+              key={id} 
+              name={name} 
+              onNameClick={onNameClick} />
+          )
+        )}
       </ul>
     </div>
   );
 };
 
-export default NameList
+export default NameList;
